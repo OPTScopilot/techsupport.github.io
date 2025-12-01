@@ -1,1 +1,98 @@
-привет
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Экран авторизации -->
+    <div id="auth-screen" class="screen active">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1 class="logo">✨ Опрос</h1>
+                
+                <!-- Форма входа -->
+                <form id="login-form" class="auth-form">
+                    <h2>Вход</h2>
+                    <div class="input-group">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-password" placeholder="Пароль" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                    <p class="switch-form">Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form id="register-form" class="auth-form hidden">
+                    <h2>Регистрация</h2>
+                    <div class="input-group">
+                        <input type="text" id="register-name" placeholder="Имя" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="register-email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="register-password" placeholder="Пароль" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    <p class="switch-form">Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран предупреждения -->
+    <div id="warning-screen" class="screen">
+        <div class="warning-container">
+            <div class="warning-card">
+                <div class="warning-icon">⚠️</div>
+                <h2>Важное предупреждение</h2>
+                <div class="warning-text">
+                    <p>Прежде чем продолжить, пожалуйста, внимательно прочитайте следующую информацию:</p>
+                    <ul>
+                        <li>Все ваши ответы будут сохранены и обработаны</li>
+                        <li>Опрос займет примерно 5 минут</li>
+                        <li>Пожалуйста, отвечайте честно и внимательно</li>
+                        <li>Вы можете пройти опрос только один раз</li>
+                        <li>Ваши данные будут использованы исключительно в исследовательских целях</li>
+                    </ul>
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="accept-warning">
+                        <span>Я прочитал(а) и принимаю условия</span>
+                    </label>
+                </div>
+                <button id="continue-btn" class="btn btn-primary" disabled>Продолжить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран опроса -->
+    <div id="survey-screen" class="screen">
+        <div class="survey-container">
+            <div class="survey-card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="question-counter">
+                    Вопрос <span id="current-question">1</span> из 5
+                </div>
+                
+                <div id="questions-container"></div>
+                
+                <div class="survey-navigation">
+                    <button id="prev-btn" class="btn btn-secondary" disabled>Назад</button>
+                    <button id="next-btn" class="btn btn-primary">Далее</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
