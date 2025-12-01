@@ -27,12 +27,104 @@ const surveyQuestions = [
     }
 ];
 
+// Тестовые вопросы
+const testQuestions = [
+    {
+        question: "Что происходит, если за время действия моего тарифа продавцы на площадке не совершили ни одной продажи?",
+        options: [
+            "Мне вернут деньги за тариф",
+            "Мне начислят бонусные баллы", 
+            "Выплат не будет, и деньги за тариф не возвращаются",
+            "Мне автоматически продлят тариф бесплатно",
+            "Администрация обязана найти новых продавцов"
+        ],
+        answer: "Выплат не будет, и деньги за тариф не возвращаются"
+    },
+    {
+        question: "Какова минимальная возрастная граница для использования сервиса?",
+        options: ["12 лет", "14 лет", "16 лет", "18 лет"],
+        answer: "14 лет"
+    },
+    {
+        question: "Кто осуществляет выплаты пользователям?",
+        options: [
+            "Продавцы напрямую",
+            "Автоматическая система без участия человека",
+            "Администратор сервиса лично",
+            "Банк-партнёр"
+        ],
+        answer: "Администратор сервиса лично"
+    },
+    {
+        question: "Что я подтверждаю, ставя галочку перед прохождением теста?",
+        options: [
+            "Что хочу зарабатывать много денег",
+            "Что уже заработал хотя бы 100 рублей",
+            "Что прочитал и понял, что доход не гарантирован и деньги за тариф не возвращаются",
+            "Что согласен получать рекламу по email"
+        ],
+        answer: "Что прочитал и понял, что доход не гарантирован и деньги за тариф не возвращаются"
+    },
+    {
+        question: "Сколько комиссии взимает сервис с каждой продажи продавца?",
+        options: ["1–2%", "3–6%", "10%", "Комиссия не взимается"],
+        answer: "3–6%"
+    },
+    {
+        question: "Что из перечисленного НЕ входит в обязанности сервиса?",
+        options: [
+            "Выплачивать деньги при наличии продаж",
+            "Предоставлять подтверждение выплаты (чек)",
+            "Гарантировать, что продавцы обязательно совершат продажи",
+            "Проводить тест на понимание условий"
+        ],
+        answer: "Гарантировать, что продавцы обязательно совершат продажи"
+    },
+    {
+        question: "Что я указываю при регистрации?",
+        options: [
+            "Страну проживания",
+            "Номер паспорта",
+            "Скан банковской карты",
+            "Имя и фамилию полностью"
+        ],
+        answer: "Страну проживания"
+    },
+    {
+        question: "Могут ли условия соглашения измениться?",
+        options: [
+            "Да, и изменения вступают в силу после публикации на сайте",
+            "Нет, условия фиксированы навсегда",
+            "Только с моего личного согласия",
+            "Только раз в год"
+        ],
+        answer: "Да, и изменения вступают в силу после публикации на сайте"
+    },
+    {
+        question: "За что сервис НЕ несёт ответственности?",
+        options: [
+            "За технические сбои сайта",
+            "За упущенную выгоду или отсутствие дохода",
+            "За неправильный ввод данных пользователем",
+            "За блокировку аккаунтов в Brawl Stars"
+        ],
+        answer: "За упущенную выгоду или отсутствие дохода"
+    },
+    {
+        question: "Сколько вопросов в этом тесте?",
+        options: ["5", "8", "10", "12", "15"],
+        answer: "10"
+    }
+];
+
 let currentQuestionIndex = 0;
 let userAnswers = [];
+let testAnswers = [];
 
 // Элементы DOM
 const authScreen = document.getElementById('auth-screen');
-const warningScreen = document.getElementById('warning-screen');
+const licenseScreen = document.getElementById('license-screen');
+const testScreen = document.getElementById('test-screen');
 const surveyScreen = document.getElementById('survey-screen');
 
 const loginForm = document.getElementById('login-form');
@@ -40,10 +132,13 @@ const registerForm = document.getElementById('register-form');
 const showRegisterLink = document.getElementById('show-register');
 const showLoginLink = document.getElementById('show-login');
 
-const acceptWarning = document.getElementById('accept-warning');
-const continueBtn = document.getElementById('continue-btn');
+const acceptLicense = document.getElementById('accept-license');
+const licenseContinueBtn = document.getElementById('license-continue-btn');
+
+const testSubmitBtn = document.getElementById('test-submit-btn');
 
 const questionsContainer = document.getElementById('questions-container');
+const testQuestionsContainer = document.getElementById('test-questions-container');
 const currentQuestionSpan = document.getElementById('current-question');
 const progressFill = document.getElementById('progress-fill');
 const prevBtn = document.getElementById('prev-btn');
@@ -69,7 +164,7 @@ loginForm.addEventListener('submit', (e) => {
     const password = document.getElementById('login-password').value;
     
     if (email && password) {
-        showScreen(warningScreen);
+        showLicenseScreen();
     }
 });
 
@@ -81,20 +176,131 @@ registerForm.addEventListener('submit', (e) => {
     const password = document.getElementById('register-password').value;
     
     if (name && email && password) {
-        showScreen(warningScreen);
+        showLicenseScreen();
     }
 });
 
-// Активация кнопки "Продолжить" при принятии условий
-acceptWarning.addEventListener('change', () => {
-    continueBtn.disabled = !acceptWarning.checked;
+// Активация кнопки "Продолжить" при принятии лицензии
+acceptLicense.addEventListener('change', () => {
+    licenseContinueBtn.disabled = !acceptLicense.checked;
+});
+
+// Переход к лицензии
+function showLicenseScreen() {
+    showScreen(licenseScreen);
+}
+
+// Переход к тесту
+licenseContinueBtn.addEventListener('click', () => {
+    showScreen(testScreen);
+    initTest();
 });
 
 // Переход к опросу
-continueBtn.addEventListener('click', () => {
+function goToSurvey() {
     showScreen(surveyScreen);
     initSurvey();
+}
+
+// Инициализация теста
+function initTest() {
+    renderTestQuestions();
+    testSubmitBtn.disabled = false;
+}
+
+// Отрисовка вопросов теста
+function renderTestQuestions() {
+    testQuestionsContainer.innerHTML = '';
+    
+    testQuestions.forEach((q, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'test-question';
+        questionDiv.dataset.index = index;
+        
+        const questionTitle = document.createElement('h4');
+        questionTitle.textContent = `${index + 1}. ${q.question}`;
+        
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'test-options';
+        
+        q.options.forEach((option, optIndex) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'test-option';
+            optionDiv.textContent = option;
+            optionDiv.dataset.questionIndex = index;
+            optionDiv.dataset.optionIndex = optIndex;
+            optionDiv.dataset.answer = option;
+            
+            optionDiv.addEventListener('click', () => selectTestAnswer(index, option, optionDiv));
+            
+            optionsDiv.appendChild(optionDiv);
+        });
+        
+        questionDiv.appendChild(questionTitle);
+        questionDiv.appendChild(optionsDiv);
+        testQuestionsContainer.appendChild(questionDiv);
+    });
+}
+
+// Выбор ответа в тесте
+function selectTestAnswer(questionIndex, answer, element) {
+    // Убираем выделение с других ответов на этот вопрос
+    const questionContainer = element.parentElement;
+    const allOptions = questionContainer.querySelectorAll('.test-option');
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+    
+    // Выделяем выбранный ответ
+    element.classList.add('selected');
+    
+    // Сохраняем ответ
+    testAnswers[questionIndex] = answer;
+}
+
+// Отправка теста
+testSubmitBtn.addEventListener('click', () => {
+    submitTest();
 });
+
+// Проверка теста
+function submitTest() {
+    let correctAnswers = 0;
+    
+    testQuestions.forEach((q, index) => {
+        if (testAnswers[index] === q.answer) {
+            correctAnswers++;
+        }
+    });
+    
+    const testResult = document.getElementById('test-result');
+    
+    if (correctAnswers === testQuestions.length) {
+        testResult.innerHTML = `
+            <div class="test-result success">
+                Поздравляем! Вы успешно прошли тест. 
+                Правильных ответов: ${correctAnswers} из ${testQuestions.length}
+            </div>
+        `;
+        
+        // Добавляем задержку перед переходом к опросу
+        setTimeout(() => {
+            goToSurvey();
+        }, 2000);
+    } else {
+        testResult.innerHTML = `
+            <div class="test-result failure">
+                Вы не прошли тест. 
+                Правильных ответов: ${correctAnswers} из ${testQuestions.length}. 
+                Пожалуйста, перечитайте соглашение и повторите попытку.
+            </div>
+        `;
+        
+        // Сбрасываем ответы и перезагружаем тест
+        testAnswers = [];
+        setTimeout(() => {
+            renderTestQuestions();
+        }, 3000);
+    }
+}
 
 // Функция переключения экранов
 function showScreen(screen) {
